@@ -59,7 +59,7 @@ public class AuthService {
                 );
             }
 
-            // Resend verification token for unverified user
+
             String newToken = tokenGenerator.generateVerificationToken();
             VerificationToken verificationToken = VerificationToken.builder()
                     .user(user)
@@ -78,7 +78,7 @@ public class AuthService {
             );
         }
 
-        // Create new user
+
         User newUser = User.builder()
                 .email(request.getEmail())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
@@ -87,7 +87,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(newUser);
 
-        // Generate verification token
+
         String token = tokenGenerator.generateVerificationToken();
         VerificationToken verificationToken = VerificationToken.builder()
                 .user(savedUser)
@@ -181,13 +181,13 @@ public class AuthService {
             );
         }
 
-        // Successful login - reset rate limit
+
         rateLimitService.resetAttempts(request.getEmail());
 
-        // Generate JWT token
+
         String jwtToken = jwtTokenProvider.generateToken(user.getEmail());
 
-        // Create session
+
         Session session = Session.builder()
                 .user(user)
                 .token(jwtToken)
