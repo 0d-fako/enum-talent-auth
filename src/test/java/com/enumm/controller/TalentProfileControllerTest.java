@@ -3,17 +3,17 @@ package com.enumm.controller;
 import com.enumm.dtos.request.TalentProfileRequest;
 import com.enumm.dtos.response.TalentProfileResponse;
 import com.enumm.security.JwtAuthenticationFilter;
+import com.enumm.security.JwtTokenProvider;
 import com.enumm.service.TalentProfileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = {JwtAuthenticationFilter.class}
         )
 )
-@AutoConfigureMockMvc(addFilters = false)
+
 class TalentProfileControllerTest {
 
     @Autowired
@@ -43,10 +43,11 @@ class TalentProfileControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private TalentProfileService talentProfileService;
 
-
+    @MockitoBean
+    private JwtTokenProvider jwtTokenProvider;
 
     @Test
     @WithMockUser(username = "test@example.com")
@@ -101,7 +102,6 @@ class TalentProfileControllerTest {
                 .andExpect(jsonPath("$.completeness").value(50))
                 .andExpect(jsonPath("$.missingFields[0]").value("statementOfPurpose"));
     }
-
 
     @Test
     @WithMockUser(username = "test@example.com")
