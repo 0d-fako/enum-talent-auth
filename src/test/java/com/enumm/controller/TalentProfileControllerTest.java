@@ -2,12 +2,16 @@ package com.enumm.controller;
 
 import com.enumm.dtos.request.TalentProfileRequest;
 import com.enumm.dtos.response.TalentProfileResponse;
+import com.enumm.security.JwtAuthenticationFilter;
 import com.enumm.service.TalentProfileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,7 +27,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TalentProfileController.class)
+@WebMvcTest(
+        controllers = TalentProfileController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {JwtAuthenticationFilter.class}
+        )
+)
+@AutoConfigureMockMvc(addFilters = false)
 class TalentProfileControllerTest {
 
     @Autowired
@@ -34,6 +45,7 @@ class TalentProfileControllerTest {
 
     @MockBean
     private TalentProfileService talentProfileService;
+
 
 
     @Test
